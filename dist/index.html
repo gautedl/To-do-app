@@ -5,8 +5,116 @@
     <title>Development</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script defer src="main.js"></script>
+    <link rel="stylesheet" href="../style/styles.css" />
   </head>
   <body>
-    <div>FUCK ssdfdfYTPO</div>
+    <header class="header">To Do List</header>
+    <div class="body-container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="titles">
+          <div class="sidebar-title">
+            <!-- <img src="/img/home.png" alt=""> -->
+            <h2>Home</h2>
+            <span id="total-count">10</span>
+          </div>
+          <div class="sidebar-title">
+            <h2>Today</h2>
+            <span id="today-count">4</span>
+          </div>
+          <div class="sidebar-title">
+            <h2>This Week</h2>
+            <span id="today-count">6</span>
+          </div>
+          <div id="horisontal-line"></div>
+          <div class="dropdown">
+            <button>Projects</button>
+            <div class="dropdown-content">
+              <a href="#">Test</a>
+            </div>
+          </div>
+        </div>
+
+        <button class="add-task">New Task</button>
+      </div>
+
+      <!-- Body of the to-do list -->
+      <div class="to-do-body">
+        <div class="body-header">
+          <div>
+            <div class="body-title">
+              <span>Yo</span>
+            </div>
+          </div>
+
+          <div class="header-buttons">
+            <div class="sort-dropdown">
+              <button class="sort-dropdown-button">
+                Sort by
+                <img src="../img/sort.png" alt="" />
+              </button>
+              <div class="dropdown-content sort-content">
+                <p data-sort="sort-alphabetical">By name</p>
+                <p data-sort="sort-alphabetical-reverse">By name, reverse</p>
+                <p data-sort="sort-priority">Priority</p>
+              </div>
+            </div>
+            <div class="switch-layout-btns">
+              <img src="../img/grid.png" alt="" data-view="grid" />
+              <img src="../img/list.png" alt="" data-view="list" />
+            </div>
+            <div class="search-bar">
+              <input type="text" placeholder="Search" class="search" />
+              <img src="../img/search.png" alt="" />
+            </div>
+          </div>
+        </div>
+
+        <div class="list-body list-view">
+          <div class="list-card">
+            <div class="checkbox-container">
+              <input
+                class="checkbox"
+                type="checkbox"
+                id="mark-task"
+                for="task-name"
+              />
+              <label for="task-name" class="checkbox-name"
+                >This is a task</label
+              >
+            </div>
+            <div class="list-items">
+              <button class="open-task">Open</button>
+              <div class="task-date">Sept 2nd</div>
+              <img id="edit-task" src="../img/edit.png" alt="" />
+              <img id="delete-task" src="../img/delete.png" alt="" />
+            </div>
+          </div>
+
+          <div class="list-card">
+            <div class="checkbox-container">
+              <input
+                class="checkbox"
+                type="checkbox"
+                id="mark-task"
+                for="task-name"
+              />
+              <label for="task-name" class="checkbox-name"
+                >This is also a task</label
+              >
+            </div>
+            <div class="list-items">
+              <button class="open-task">Open</button>
+              <div class="task-date">Sept 31st</div>
+              <img id="edit-task" src="../img/edit.png" alt="" />
+              <img id="delete-task" src="../img/delete.png" alt="" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      icons by <a target="_blank" href="https://icons8.com">Icons8</a>
+    </footer>
   </body>
 </html>
