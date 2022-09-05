@@ -28,10 +28,11 @@
           </div>
           <div id="horisontal-line"></div>
           <div class="dropdown">
-            <button>Projects</button>
-            <div class="dropdown-content">
-              <a href="#">Test</a>
-            </div>
+            <h2>Projects</h2>
+            <ul class="project-list">
+              <li>This is a project</li>
+              <li><button class="new-project">Add Project</button></li>
+            </ul>
           </div>
         </div>
 
@@ -113,6 +114,91 @@
         </div>
       </div>
     </div>
+
+    <div class="modal" id="modal">
+      <div class="modal-dialog">
+        <header class="modal-header">
+          <p>New Task</p>
+          <button class="close-modal" aria-label="close modal" data-close>
+            X
+          </button>
+        </header>
+        <section class="modal-content">
+          <form class="task-form">
+            <div class="left-side">
+              <input
+                class="inputs"
+                placeholder="Task name"
+                type="text"
+                id="title"
+                name="title"
+                required
+              />
+              <textarea
+                type="text"
+                placeholder="Description"
+                id="author"
+                name="author"
+                cols="30"
+                rows="4"
+                required
+              ></textarea>
+            </div>
+            <div class="right-side">
+              <div class="form-div">
+                <label for="due-date">Due Date</label>
+                <input
+                  type="date"
+                  class="inputs"
+                  name="due-date"
+                  id="due-date"
+                />
+              </div>
+              <div class="form-div">
+                <label for="task-priority">Priority</label>
+                <select name="task-priority" id="task-priority">
+                  <option class="lowPri" value="low">Low</option>
+                  <option value="medium" class="mediumPri">Medium</option>
+                  <option value="High" class="highPri">High</option>
+                </select>
+              </div>
+              <div class="form-div">
+                <label for="pick-project">Project</label>
+                <select name="picki-project" id="pick-project">
+                  <option value="home">Home</option>
+                </select>
+              </div>
+            </div>
+            <div class="submit-btn">
+              <button class="submit" type="submit">Submit</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+
+    <div class="modal project-modal" id="modal">
+      <div class="project-modal-dialog">
+        <header class="modal-header">
+          <p>New Project</p>
+          <button class="close-modal" aria-label="close modal" data-close>
+            X
+          </button>
+        </header>
+        <section>
+          <form action="modal-form">
+            <div class="project-inputs">
+              <input type="text" placeholder="Project name" required />
+            </div>
+            <div class="submit-btn">
+              <button class="submit" type="submit">Submit</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+    <div class="overlay"></div>
+
     <footer class="footer">
       icons by <a target="_blank" href="https://icons8.com">Icons8</a>
     </footer>

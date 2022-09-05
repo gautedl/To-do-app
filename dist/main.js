@@ -10,6 +10,16 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./pages/UI.js":
+/*!*********************!*\
+  !*** ./pages/UI.js ***!
+  \*********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"closeModal\": () => (/* binding */ closeModal),\n/* harmony export */   \"openProjectModal\": () => (/* binding */ openProjectModal),\n/* harmony export */   \"openTaskModal\": () => (/* binding */ openTaskModal)\n/* harmony export */ });\nconst overlay = document.querySelector(\".overlay\");\nconst closeEls = document.querySelectorAll(\"[data-close]\");\nconst isVisible = \"is-visible\";\n\nfunction openTaskModal() {\n  const modal = document.querySelector(\".modal\");\n  const newTask = document.querySelector(\".add-task\");\n  newTask.addEventListener(\"click\", function () {\n    modal.classList.add(isVisible);\n    overlay.classList.add(\"active\");\n  });\n}\n\nfunction openProjectModal() {\n  const modal = document.querySelector(\".project-modal\");\n  const newProject = document.querySelector(\".new-project\");\n  newProject.addEventListener(\"click\", function () {\n    modal.classList.add(isVisible);\n    overlay.classList.add(\"active\");\n  });\n}\n\nfunction closeModal() {\n  for (const el of closeEls) {\n    el.addEventListener(\"click\", function () {\n      this.parentElement.parentElement.parentElement.classList.remove(\n        isVisible\n      );\n      overlay.classList.remove(\"active\");\n    });\n  }\n}\n\n\n//# sourceURL=webpack://todo/./pages/UI.js?");
+
+/***/ }),
+
 /***/ "./pages/project.js":
 /*!**************************!*\
   !*** ./pages/project.js ***!
@@ -36,7 +46,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
   \**********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _pages_task__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../pages/task */ \"./pages/task.js\");\n/* harmony import */ var _pages_project__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../pages/project */ \"./pages/project.js\");\n\n\n\nconst task = new _pages_task__WEBPACK_IMPORTED_MODULE_0__[\"default\"]();\ntask.setTitle(\"Yo\");\ntask.setDescription(\"desc\");\ntask.setDueDate(\"10-15-15\");\ntask.setPriority(\"high\");\n\nconst project = new _pages_project__WEBPACK_IMPORTED_MODULE_1__[\"default\"](\"new\", \"project\");\nproject.addTask(task);\n\nconsole.log(project);\n\n\n//# sourceURL=webpack://todo/./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _pages_task__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../pages/task */ \"./pages/task.js\");\n/* harmony import */ var _pages_project__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../pages/project */ \"./pages/project.js\");\n/* harmony import */ var _pages_UI__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../pages/UI */ \"./pages/UI.js\");\n\n\n\n\n(0,_pages_UI__WEBPACK_IMPORTED_MODULE_2__.openTaskModal)();\n(0,_pages_UI__WEBPACK_IMPORTED_MODULE_2__.openProjectModal)();\n(0,_pages_UI__WEBPACK_IMPORTED_MODULE_2__.closeModal)();\nconst task = new _pages_task__WEBPACK_IMPORTED_MODULE_0__[\"default\"]();\ntask.setTitle(\"Yo\");\ntask.setDescription(\"desc\");\ntask.setDueDate(\"10-15-15\");\ntask.setPriority(\"high\");\n\nconst project = new _pages_project__WEBPACK_IMPORTED_MODULE_1__[\"default\"](\"new\", \"project\");\nproject.addTask(task);\n\nconsole.log(project);\n\n\n//# sourceURL=webpack://todo/./src/index.js?");
 
 /***/ })
 
