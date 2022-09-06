@@ -15,15 +15,15 @@
         <div class="titles">
           <div class="sidebar-title">
             <!-- <img src="/img/home.png" alt=""> -->
-            <h2>Home</h2>
+            <h2 class="timeframe">Home</h2>
             <span id="total-count">10</span>
           </div>
           <div class="sidebar-title">
-            <h2>Today</h2>
+            <h2 class="timeframe">Today</h2>
             <span id="today-count">4</span>
           </div>
           <div class="sidebar-title">
-            <h2>This Week</h2>
+            <h2 class="timeframe">This Week</h2>
             <span id="today-count">6</span>
           </div>
           <div id="horisontal-line"></div>
@@ -70,134 +70,13 @@
             </div>
           </div>
         </div>
-
         <div class="list-body list-view">
-          <!-- <div class="list-card">
-            <div class="checkbox-container">
-              <input
-                class="checkbox"
-                type="checkbox"
-                id="mark-task"
-                for="task-name"
-              />
-              <label for="task-name" class="checkbox-name"
-                >This is a task</label
-              >
-            </div>
-            <div class="list-items">
-              <button class="open-task">Open</button>
-              <div class="task-date">Sept 2nd</div>
-              <img id="edit-task" src="../img/edit.png" alt="" />
-              <img id="delete-task" src="../img/delete.png" alt="" />
-            </div>
-          </div>
-
-          <div class="list-card">
-            <div class="checkbox-container">
-              <input
-                class="checkbox"
-                type="checkbox"
-                id="mark-task"
-                for="task-name"
-              />
-              <label for="task-name" class="checkbox-name"
-                >This is also a task</label
-              >
-            </div>
-            <div class="list-items">
-              <button class="open-task">Open</button>
-              <div class="task-date">Sept 31st</div>
-              <img id="edit-task" src="../img/edit.png" alt="" />
-              <img id="delete-task" src="../img/delete.png" alt="" />
-            </div>
-          </div>
+          
         </div>
-      </div> -->
-    </div>
-
-    <div class="modal" id="modal">
-      <div class="modal-dialog">
-        <header class="modal-header">
-          <p>New Task</p>
-          <button class="close-modal" aria-label="close modal" data-close>
-            X
-          </button>
-        </header>
-        <section class="modal-content">
-          <form class="task-form">
-            <div class="left-side">
-              <input
-                class="inputs"
-                placeholder="Task name"
-                type="text"
-                id="title"
-                name="title"
-                required
-              />
-              <textarea
-                type="text"
-                placeholder="Description"
-                id="description"
-                name="description"
-                cols="30"
-                rows="4"
-                required
-              ></textarea>
-            </div>
-            <div class="right-side">
-              <div class="form-div">
-                <label for="duedate">Due Date</label>
-                <input type="date" class="inputs" name="duedate" id="duedate" />
-              </div>
-              <div class="form-div">
-                <label for="taskpriority">Priority</label>
-                <select name="taskpriority" id="taskpriority">
-                  <option class="lowPri" value="low">Low</option>
-                  <option value="medium" class="mediumPri">Medium</option>
-                  <option value="High" class="highPri">High</option>
-                </select>
-              </div>
-              <div class="form-div">
-                <label for="pick-project">Project</label>
-                <select name="picki-project" id="pick-project">
-                  <option value="home">Home</option>
-                </select>
-              </div>
-            </div>
-            <div class="submit-btn">
-              <button class="submit-task" type="submit">Submit</button>
-            </div>
-          </form>
-        </section>
       </div>
-    </div>
 
-    <div class="modal project-modal" id="modal">
-      <div class="project-modal-dialog">
-        <header class="modal-header">
-          <p>New Project</p>
-          <button class="close-modal" aria-label="close modal" data-close>
-            X
-          </button>
-        </header>
-        <section>
-          <form class="modal-form">
-            <div class="project-inputs">
-              <input
-                type="text"
-                placeholder="Project name"
-                id="projectname"
-                name="projectname"
-                required
-              />
-            </div>
-            <div class="submit-btn">
-              <button class="submit-project" type="submit">Submit</button>
-            </div>
-          </form>
-        </section>
-      </div>
-    </div>
+    <div class="modal" id="modal"></div>
+    
     <div class="overlay"></div>
 
     <footer class="footer">

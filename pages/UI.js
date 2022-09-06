@@ -2,42 +2,171 @@ import Project from "./project";
 import Task from "./task";
 import edit from "../img/edit.png";
 import deleteImgSrc from "../img/delete.png";
+import { submitTask, submitProject } from "./handler";
+import { listOfProjects } from "./storage";
 
 const overlay = document.querySelector(".overlay");
-const closeEls = document.querySelectorAll("[data-close]");
 const isVisible = "is-visible";
 const listBody = document.querySelector(".list-body");
+const modal = document.querySelector(".modal");
+const projectList = document.querySelector(".project-list");
 
+// Opens the modal for creating a new task
 export function openTaskModal() {
-  const modal = document.querySelector(".modal");
   const newTask = document.querySelector(".add-task");
   newTask.addEventListener("click", function () {
+    taskModal();
     modal.classList.add(isVisible);
     overlay.classList.add("active");
   });
 }
 
-export function openProjectModal() {
-  const modal = document.querySelector(".project-modal");
-  const newProject = document.querySelector(".new-project");
-  newProject.addEventListener("click", function () {
-    modal.classList.add(isVisible);
-    overlay.classList.add("active");
+// Function for closing modal. Takes the close button of current modal as input
+function closeModal(el) {
+  el.addEventListener("click", function () {
+    this.parentElement.parentElement.parentElement.classList.remove(isVisible);
+    overlay.classList.remove("active");
   });
 }
 
-export function closeModal() {
-  for (const el of closeEls) {
-    el.addEventListener("click", function () {
-      this.parentElement.parentElement.parentElement.classList.remove(
-        isVisible
-      );
-      overlay.classList.remove("active");
-    });
+// Function for opening the project modal
+function projectModal() {
+  modal.innerHTML = "";
+
+  const modalDialog = document.createElement("div");
+  // modalDialog.className = "modal";
+  modalDialog.className = "project-modal-dialog";
+  modalDialog.innerHTML = `
+        <header class="modal-header">
+          <p>New Project</p>
+          <button class="close-modal" aria-label="close modal" data-close>
+            X
+          </button>
+        </header>
+        <section>
+          <form class="modal-form">
+            <div class="project-inputs">
+              <input
+                type="text"
+                placeholder="Project name"
+                id="projectname"
+                name="projectname"
+                required
+              />
+            </div>
+            <div class="submit-btn">
+              <button class="submit-project" type="button">Submit</button>
+            </div>
+          </form>
+        </section>
+      `;
+  modal.appendChild(modalDialog);
+  const closeProjectModal = document.querySelector("[data-close]");
+  modal.classList.add(isVisible);
+  overlay.classList.add("active");
+  submitProject();
+  closeModal(closeProjectModal);
+}
+
+// Function for creating and populating the task modal
+function taskModal() {
+  modal.innerHTML = ""; // Cleans up modal for every time it's called
+
+  const modalDialog = document.createElement("div");
+  modalDialog.className = "modal-dialog";
+  const header = document.createElement("header");
+  header.className = "modal-header";
+  header.innerHTML = `
+          <p>New Task</p>
+          <button class="close-modal" aria-label="close modal" data-close>
+            X
+          </button>`;
+  modalDialog.appendChild(header);
+
+  const section = document.createElement("section");
+  section.className = "modal-content";
+  const form = document.createElement("form");
+  form.className = "task-form";
+  const leftSide = document.createElement("div");
+  leftSide.className = "left-side";
+  leftSide.innerHTML = `
+              <input
+                class="inputs"
+                placeholder="Task name"
+                type="text"
+                id="title"
+                name="title"
+                required
+              />
+              <textarea
+                type="text"
+                placeholder="Description"
+                id="description"
+                name="description"
+                cols="30"
+                rows="4"
+                required
+              ></textarea>`;
+
+  form.appendChild(leftSide);
+  const rightSide = document.createElement("div");
+  rightSide.className = "right-side";
+
+  const dueDateDiv = document.createElement("div");
+  dueDateDiv.className = "form-div";
+  dueDateDiv.innerHTML = `
+                <label for="duedate">Due Date</label>
+                <input type="date" class="inputs" name="duedate" id="duedate" />`;
+
+  const priDiv = document.createElement("div");
+  priDiv.className = "form-div";
+  priDiv.innerHTML = `<label for="taskpriority">Priority</label>
+                <select name="taskpriority" id="taskpriority">
+                  <option class="lowPri" value="low">Low</option>
+                  <option value="medium" class="mediumPri">Medium</option>
+                  <option value="high" class="highPri">High</option>
+                </select>`;
+
+  const projectDiv = document.createElement("div");
+  projectDiv.className = "form-div";
+  projectDiv.innerHTML = `<label for="pickproject">Project</label>`;
+
+  const pickProject = document.createElement("select");
+  pickProject.name = "pickproject";
+  pickProject.id = "pickproject";
+  const home = document.createElement("option");
+  home.value = "home";
+  home.textContent = "Home";
+  pickProject.appendChild(home);
+  for (let i = 0; i < listOfProjects.length; i++) {
+    const option = document.createElement("option");
+    option.value = listOfProjects[i].title;
+    option.textContent = listOfProjects[i].title;
+    pickProject.appendChild(option);
   }
+
+  projectDiv.appendChild(pickProject);
+
+  rightSide.appendChild(dueDateDiv);
+  rightSide.appendChild(priDiv);
+  rightSide.appendChild(projectDiv);
+  form.appendChild(rightSide);
+
+  const button = document.createElement("div");
+  button.className = "submit-btn";
+  button.innerHTML = `<button class="submit-task" type="button">Submit</button>`;
+  form.appendChild(button);
+  section.appendChild(form);
+  modalDialog.appendChild(section);
+
+  modal.appendChild(modalDialog); // Appends the newly created modal to modal tag in index.html
+  const closeTaskModal = document.querySelector("[data-close]"); //Fetches the clsoe button from modal inenrHTML
+  submitTask(); // Submits task to project. NEEDS TO GET THE CORRECT PROJECT
+  closeModal(closeTaskModal); // Closes the modal
 }
 
-export function populateList(project) {
+// Populates the list view with tasks from the selected project
+export function populateList(project = "home") {
   listBody.innerHTML = "";
 
   for (let i = 0; i < project.tasks.length; i++) {
@@ -84,17 +213,34 @@ export function populateList(project) {
     listCard.appendChild(listItem);
 
     listBody.appendChild(listCard);
+  }
+}
 
-    console.log(listCard);
+export function populateProjectList() {
+  projectList.innerHTML = "";
+  const newProjectBtn = document.createElement("button");
+  newProjectBtn.className = "new-project";
+  newProjectBtn.textContent = "Add Project";
+  newProjectBtn.onclick = projectModal;
+  const btnLi = document.createElement("li");
+  btnLi.appendChild(newProjectBtn);
+
+  for (let i = 0; i < listOfProjects.length; i++) {
+    const projecTitle = document.createElement("li");
+    projecTitle.textContent = listOfProjects[i].title;
+    projectList.appendChild(projecTitle);
   }
 
-  function priorityColor(priority, div) {
-    if (priority === "low") {
-      div.classList.add("low-pri");
-    } else if (priority === "medium") {
-      div.classList.add("medium-pri");
-    } else if (priority === "high") {
-      div.classList.add("high-pri");
-    }
+  projectList.appendChild(btnLi);
+}
+
+// Function for giving the tasks the correct priority color
+function priorityColor(priority, div) {
+  if (priority === "low") {
+    div.classList.add("low-pri");
+  } else if (priority === "medium") {
+    div.classList.add("medium-pri");
+  } else if (priority === "high") {
+    div.classList.add("high-pri");
   }
 }
