@@ -72,7 +72,7 @@
         </div>
 
         <div class="list-body list-view">
-          <div class="list-card">
+          <!-- <div class="list-card">
             <div class="checkbox-container">
               <input
                 class="checkbox"
@@ -112,7 +112,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="modal" id="modal">
@@ -137,8 +137,8 @@
               <textarea
                 type="text"
                 placeholder="Description"
-                id="author"
-                name="author"
+                id="description"
+                name="description"
                 cols="30"
                 rows="4"
                 required
@@ -146,17 +146,12 @@
             </div>
             <div class="right-side">
               <div class="form-div">
-                <label for="due-date">Due Date</label>
-                <input
-                  type="date"
-                  class="inputs"
-                  name="due-date"
-                  id="due-date"
-                />
+                <label for="duedate">Due Date</label>
+                <input type="date" class="inputs" name="duedate" id="duedate" />
               </div>
               <div class="form-div">
-                <label for="task-priority">Priority</label>
-                <select name="task-priority" id="task-priority">
+                <label for="taskpriority">Priority</label>
+                <select name="taskpriority" id="taskpriority">
                   <option class="lowPri" value="low">Low</option>
                   <option value="medium" class="mediumPri">Medium</option>
                   <option value="High" class="highPri">High</option>
@@ -170,7 +165,7 @@
               </div>
             </div>
             <div class="submit-btn">
-              <button class="submit" type="submit">Submit</button>
+              <button class="submit-task" type="submit">Submit</button>
             </div>
           </form>
         </section>
@@ -186,12 +181,18 @@
           </button>
         </header>
         <section>
-          <form action="modal-form">
+          <form class="modal-form">
             <div class="project-inputs">
-              <input type="text" placeholder="Project name" required />
+              <input
+                type="text"
+                placeholder="Project name"
+                id="projectname"
+                name="projectname"
+                required
+              />
             </div>
             <div class="submit-btn">
-              <button class="submit" type="submit">Submit</button>
+              <button class="submit-project" type="submit">Submit</button>
             </div>
           </form>
         </section>

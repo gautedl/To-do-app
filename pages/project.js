@@ -1,7 +1,6 @@
 export default class Project {
-  constructor(title, description) {
+  constructor(title) {
     this.title = title;
-    this.description = description;
     this.tasks = [];
   }
 
@@ -13,20 +12,12 @@ export default class Project {
     this.title = newTitle;
   }
 
-  getDescription() {
-    return this.description;
-  }
-
-  setDescription(newDescription) {
-    this.description = newDescription;
-  }
-
   getTasks() {
     return this.tasks;
   }
 
   findTask(taskName) {
-    return this.tasks.some((task) => task.name === taskName);
+    return this.tasks.some((task) => task.title === taskName);
   }
 
   deleteTask(taskName) {
@@ -34,7 +25,7 @@ export default class Project {
   }
 
   addTask(newTask) {
-    if (this.tasks.some((task) => task.name === taskName.name)) {
+    if (this.tasks.some((task) => task.title === newTask.title)) {
       return;
     } else this.tasks.push(newTask);
   }

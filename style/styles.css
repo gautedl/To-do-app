@@ -288,7 +288,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     
 }
 
-#due-date {
+#duedate {
     border: none;
     box-sizing: border-box;
     outline: 0;
@@ -325,4 +325,16 @@ li {
     overflow: auto;
     background: rgb(241, 241, 241);
     border: 2px gray solid;
+}
+
+.low-pri {
+    border-left: 5px solid green;
+}
+
+.medium-pri {
+    border-left: 5px solid yellow;
+}
+
+.high-pri {
+    border-left:5px solid red ;
 }
