@@ -1,7 +1,7 @@
 import Project from "./project";
 import Task from "./task";
 import { openTaskModal, populateList, populateProjectList } from "./UI";
-import { listOfProjects, listOfTasks } from "./storage";
+import { listOfProjects, curProject } from "./storage";
 import { format, isToday } from "date-fns";
 
 const project = new Project("new");
@@ -46,6 +46,8 @@ export function submitProject() {
   });
 }
 
+function deleteTask() {}
+
 const today = new Date();
 
 const task = new Task();
@@ -68,7 +70,6 @@ project.addTask(task2);
 // Initializes the app
 export function initApp() {
   openTaskModal();
-
   // console.log(project);
   populateList();
   populateProjectList();

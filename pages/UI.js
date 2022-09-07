@@ -14,6 +14,7 @@ const sideBarButtons = document.querySelectorAll(".timeframe");
 const totalTasks = document.getElementById("total-count");
 const todayTasks = document.getElementById("today-count");
 const weekTasks = document.getElementById("week-count");
+const listTitle = document.getElementById("list-title");
 
 let curProject = listOfProjects[2]; //Stores the current project selected. Defaults at home
 
@@ -234,11 +235,29 @@ export function populateProjectList() {
 
   for (let i = 3; i < listOfProjects.length; i++) {
     const projecTitle = document.createElement("li");
+    projecTitle.className = "project-title";
     projecTitle.textContent = listOfProjects[i].title;
     projectList.appendChild(projecTitle);
   }
 
   projectList.appendChild(btnLi);
+  selectProjectSideBar();
+}
+
+function selectProjectSideBar() {
+  const projectButtons = document.querySelectorAll(".project-title");
+
+  projectButtons.forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      for (let i = 3; i < listOfProjects.length; i++) {
+        if (listOfProjects[i].title === e.target.textContent) {
+          populateList(listOfProjects[i]);
+          listTitle.textContent = listOfProjects[i].title;
+          curProject = listOfProjects[i];
+        }
+      }
+    });
+  });
 }
 
 // Function for giving the tasks the correct priority color
@@ -289,16 +308,19 @@ sideBarButtons.forEach((btn) => {
   btn.addEventListener("click", function (e) {
     if (e.target.textContent === "Today") {
       curProject = listOfProjects[0];
+      listTitle.textContent = "Today";
       populateList(curProject);
     }
 
     if (e.target.textContent === "Home") {
       curProject = listOfProjects[2];
+      listTitle.textContent = "Home";
       populateList(curProject);
     }
 
     if (e.target.textContent === "This Week") {
       curProject = listOfProjects[1];
+      listTitle.textContent = "This Week";
       populateList(curProject);
     }
   });

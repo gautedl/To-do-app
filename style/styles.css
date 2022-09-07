@@ -343,3 +343,12 @@ li {
     color: lightgray;
     cursor: pointer;
 }
+
+.project-title {
+    font-size: 20px;
+}
+
+.project-title:hover {
+    color: lightgray;
+    cursor: pointer;
+}
