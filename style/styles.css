@@ -338,3 +338,8 @@ li {
 .high-pri {
     border-left:5px solid red ;
 }
+
+.timeframe:hover {
+    color: lightgray;
+    cursor: pointer;
+}

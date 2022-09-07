@@ -1,3 +1,5 @@
+import { isThisWeek, isToday, toDate } from "date-fns";
+
 export default class Project {
   constructor(title) {
     this.title = title;
@@ -28,5 +30,19 @@ export default class Project {
     if (this.tasks.some((task) => task.title === newTask.title)) {
       return;
     } else this.tasks.push(newTask);
+  }
+
+  getTasksToday() {
+    return this.tasks.filter((task) => {
+      const date = new Date(task.getFormattedDate());
+      return isToday(date);
+    });
+  }
+
+  getTasksWeek() {
+    return this.tasks.filter((task) => {
+      const date = new Date(task.getFormattedDate());
+      return isThisWeek(date);
+    });
   }
 }

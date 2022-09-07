@@ -1,15 +1,21 @@
-import Project from "./project";
-import Task from "./task";
 import edit from "../img/edit.png";
 import deleteImgSrc from "../img/delete.png";
 import { submitTask, submitProject } from "./handler";
 import { listOfProjects } from "./storage";
+import isToday from "date-fns/isToday";
 
 const overlay = document.querySelector(".overlay");
 const isVisible = "is-visible";
 const listBody = document.querySelector(".list-body");
 const modal = document.querySelector(".modal");
 const projectList = document.querySelector(".project-list");
+const sideBarButtons = document.querySelectorAll(".timeframe");
+
+const totalTasks = document.getElementById("total-count");
+const todayTasks = document.getElementById("today-count");
+const weekTasks = document.getElementById("week-count");
+
+let curProject = listOfProjects[2]; //Stores the current project selected. Defaults at home
 
 // Opens the modal for creating a new task
 export function openTaskModal() {
@@ -134,11 +140,7 @@ function taskModal() {
   const pickProject = document.createElement("select");
   pickProject.name = "pickproject";
   pickProject.id = "pickproject";
-  const home = document.createElement("option");
-  home.value = "home";
-  home.textContent = "Home";
-  pickProject.appendChild(home);
-  for (let i = 0; i < listOfProjects.length; i++) {
+  for (let i = 2; i < listOfProjects.length; i++) {
     const option = document.createElement("option");
     option.value = listOfProjects[i].title;
     option.textContent = listOfProjects[i].title;
@@ -166,8 +168,12 @@ function taskModal() {
 }
 
 // Populates the list view with tasks from the selected project
-export function populateList(project = "home") {
+export function populateList(project = curProject) {
   listBody.innerHTML = "";
+  addAllTasksToHome();
+  numberOfTasksSideBar();
+
+  if (project.tasks.length === 0) return;
 
   for (let i = 0; i < project.tasks.length; i++) {
     const listCard = document.createElement("div");
@@ -201,7 +207,7 @@ export function populateList(project = "home") {
     priorityColor(project.tasks[i].priority, listCard);
 
     checkboxLabel.textContent = project.tasks[i].title;
-    dueDate.textContent = project.tasks[i].dueDate;
+    dueDate.textContent = project.tasks[i].getFormattedDate();
     checkBoxContainer.appendChild(checkboxLabel);
 
     listItem.appendChild(openTaskBtn);
@@ -216,6 +222,7 @@ export function populateList(project = "home") {
   }
 }
 
+// Lists the projects created
 export function populateProjectList() {
   projectList.innerHTML = "";
   const newProjectBtn = document.createElement("button");
@@ -225,7 +232,7 @@ export function populateProjectList() {
   const btnLi = document.createElement("li");
   btnLi.appendChild(newProjectBtn);
 
-  for (let i = 0; i < listOfProjects.length; i++) {
+  for (let i = 3; i < listOfProjects.length; i++) {
     const projecTitle = document.createElement("li");
     projecTitle.textContent = listOfProjects[i].title;
     projectList.appendChild(projecTitle);
@@ -244,3 +251,55 @@ function priorityColor(priority, div) {
     div.classList.add("high-pri");
   }
 }
+
+// Shows a number after Home, Today, This week with number of tasks
+function numberOfTasksSideBar() {
+  tasksToday();
+  tasksWeek();
+  totalTasks.textContent = listOfProjects[2].tasks.length;
+  todayTasks.textContent = listOfProjects[2].getTasksToday().length;
+  weekTasks.textContent = listOfProjects[2].getTasksWeek().length;
+}
+
+// Adds all the tasks to the "home" default project
+function addAllTasksToHome() {
+  for (let i = 3; i < listOfProjects.length; i++) {
+    for (let j = 0; j < listOfProjects[i].tasks.length; j++) {
+      listOfProjects[2].addTask(listOfProjects[i].tasks[j]);
+    }
+  }
+}
+
+// Populates the today object with todays tasks
+function tasksToday() {
+  for (let i = 0; i < listOfProjects[2].getTasksToday().length; i++) {
+    listOfProjects[0].addTask(listOfProjects[2].getTasksToday()[i]);
+  }
+}
+
+// Populates the week object with this weeks tasks
+function tasksWeek() {
+  for (let i = 0; i < listOfProjects[2].getTasksWeek().length; i++) {
+    listOfProjects[1].addTask(listOfProjects[2].getTasksWeek()[i]);
+  }
+}
+
+// buttons for selecting Home, Today or This week
+sideBarButtons.forEach((btn) => {
+  btn.addEventListener("click", function (e) {
+    if (e.target.textContent === "Today") {
+      curProject = listOfProjects[0];
+      populateList(curProject);
+    }
+
+    if (e.target.textContent === "Home") {
+      curProject = listOfProjects[2];
+      populateList(curProject);
+    }
+
+    if (e.target.textContent === "This Week") {
+      curProject = listOfProjects[1];
+      populateList(curProject);
+    }
+  });
+});

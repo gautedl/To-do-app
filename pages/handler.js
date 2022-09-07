@@ -1,12 +1,8 @@
 import Project from "./project";
 import Task from "./task";
-import {
-  openTaskModal,
-  openProjectModal,
-  populateList,
-  populateProjectList,
-} from "./UI";
-import { listOfProjects } from "./storage";
+import { openTaskModal, populateList, populateProjectList } from "./UI";
+import { listOfProjects, listOfTasks } from "./storage";
+import { format, isToday } from "date-fns";
 
 const project = new Project("new");
 const isVisible = "is-visible";
@@ -29,8 +25,7 @@ export function submitTask() {
       taskpriority.value
     );
     project.addTask(newTask);
-    console.log(newTask);
-    populateList(project);
+    populateList();
     document.querySelector(".modal.is-visible").classList.remove(isVisible);
     overlay.classList.remove("active");
   });
@@ -51,29 +46,31 @@ export function submitProject() {
   });
 }
 
+const today = new Date();
+
 const task = new Task();
 task.setTitle("Yo");
 task.setDescription("desc");
-task.setDueDate("10-15-15");
+task.setDueDate("2022-09-08");
 task.setPriority("high");
 
 const task2 = new Task();
 task2.setTitle("Y234o");
 task2.setDescription("desc");
-task2.setDueDate("10-15-15");
+task2.setDueDate("2022-09-07");
 task2.setPriority("low");
 const anotherProject = new Project("msdfasdf");
 listOfProjects.push(project, anotherProject);
 
-project.addTask(task);
+anotherProject.addTask(task);
 project.addTask(task2);
 
 // Initializes the app
 export function initApp() {
   openTaskModal();
 
-  console.log(project);
-  populateList(project);
+  // console.log(project);
+  populateList();
   populateProjectList();
   console.log(listOfProjects);
 }
