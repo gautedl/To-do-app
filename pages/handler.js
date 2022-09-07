@@ -1,15 +1,11 @@
 import Project from "./project";
 import Task from "./task";
 import { openTaskModal, populateList, populateProjectList } from "./UI";
-import { listOfProjects, curProject } from "./storage";
-import { format, isToday } from "date-fns";
 
-const project = new Project("new");
 const isVisible = "is-visible";
 const overlay = document.querySelector(".overlay");
 
-// Submits the task a Project. NEEDS TO GET THE SELECTED PROJECT
-export function submitTask() {
+export function submitTask(listOfProjects, project) {
   const submitTaskBtn = document.querySelector(".submit-task");
   submitTaskBtn.addEventListener("click", function (e) {
     // const inProject = pickproject.value.some((el) => (el.title = title.value)); // Checks if task is in chosen project
@@ -24,54 +20,47 @@ export function submitTask() {
       duedate.value,
       taskpriority.value
     );
-    project.addTask(newTask);
+    // project.addTask(newTask);
+    const chosenProj = project.value; //The name value of the chosen project
+
+    getProjectFromName(listOfProjects, chosenProj).addTask(newTask); // Adds the task to the correct project
     populateList();
     document.querySelector(".modal.is-visible").classList.remove(isVisible);
     overlay.classList.remove("active");
   });
 }
 
+// Gets a project from project name
+function getProjectFromName(project, title) {
+  for (let i = 0; i < project.length; i++) {
+    if (project[i].title === title) {
+      return project[i];
+    }
+  }
+}
+
 // Creates new project
-export function submitProject() {
+export function submitProject(listOfProjects) {
   const submitProjectBtn = document.querySelector(".submit-project");
   submitProjectBtn.addEventListener("click", function (e) {
     if (projectname.value === "") return;
 
     const newProject = new Project(projectname.value);
-    listOfProjects.push(newProject);
+    listOfProjects.addProject(newProject);
     populateProjectList();
     document.querySelector(".modal.is-visible").classList.remove(isVisible);
     overlay.classList.remove("active");
     console.log(listOfProjects);
   });
+  console.log(listOfProjects);
 }
 
 function deleteTask() {}
 
-const today = new Date();
-
-const task = new Task();
-task.setTitle("Yo");
-task.setDescription("desc");
-task.setDueDate("2022-09-08");
-task.setPriority("high");
-
-const task2 = new Task();
-task2.setTitle("Y234o");
-task2.setDescription("desc");
-task2.setDueDate("2022-09-07");
-task2.setPriority("low");
-const anotherProject = new Project("msdfasdf");
-listOfProjects.push(project, anotherProject);
-
-anotherProject.addTask(task);
-project.addTask(task2);
-
 // Initializes the app
 export function initApp() {
   openTaskModal();
-  // console.log(project);
+
   populateList();
   populateProjectList();
-  console.log(listOfProjects);
 }

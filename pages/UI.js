@@ -1,9 +1,12 @@
 import edit from "../img/edit.png";
 import deleteImgSrc from "../img/delete.png";
 import { submitTask, submitProject } from "./handler";
-import { listOfProjects } from "./storage";
-import isToday from "date-fns/isToday";
+import ListOfProjects from "./storage";
+import Task from "./task";
+import Project from "./project";
 
+const newProject = new ListOfProjects();
+const listOfProjects = newProject.getProjects();
 const overlay = document.querySelector(".overlay");
 const isVisible = "is-visible";
 const listBody = document.querySelector(".list-body");
@@ -17,6 +20,27 @@ const weekTasks = document.getElementById("week-count");
 const listTitle = document.getElementById("list-title");
 
 let curProject = listOfProjects[2]; //Stores the current project selected. Defaults at home
+
+// Test data
+const project = new Project("new");
+const task = new Task();
+task.setTitle("Yo");
+task.setDescription("desc");
+task.setDueDate("2022-09-08");
+task.setPriority("high");
+
+const task2 = new Task();
+task2.setTitle("Y234o");
+task2.setDescription("desc");
+task2.setDueDate("2022-09-07");
+task2.setPriority("low");
+const anotherProject = new Project("msdfasdf");
+
+anotherProject.addTask(task);
+project.addTask(task2);
+newProject.addProject(project);
+newProject.addProject(anotherProject);
+// End test data
 
 // Opens the modal for creating a new task
 export function openTaskModal() {
@@ -71,7 +95,7 @@ function projectModal() {
   const closeProjectModal = document.querySelector("[data-close]");
   modal.classList.add(isVisible);
   overlay.classList.add("active");
-  submitProject();
+  submitProject(newProject);
   closeModal(closeProjectModal);
 }
 
@@ -164,7 +188,7 @@ function taskModal() {
 
   modal.appendChild(modalDialog); // Appends the newly created modal to modal tag in index.html
   const closeTaskModal = document.querySelector("[data-close]"); //Fetches the clsoe button from modal inenrHTML
-  submitTask(); // Submits task to project. NEEDS TO GET THE CORRECT PROJECT
+  submitTask(listOfProjects, pickProject); // Submits task to project.
   closeModal(closeTaskModal); // Closes the modal
 }
 
