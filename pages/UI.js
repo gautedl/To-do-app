@@ -1,6 +1,6 @@
 import edit from "../img/edit.png";
 import deleteImgSrc from "../img/delete.png";
-import { submitTask, submitProject } from "./handler";
+import { submitTask, submitProject, deleteTask, editTask } from "./handler";
 import ListOfProjects from "./storage";
 import Task from "./task";
 import Project from "./project";
@@ -195,7 +195,7 @@ function taskModal() {
 // Populates the list view with tasks from the selected project
 export function populateList(project = curProject) {
   listBody.innerHTML = "";
-  addAllTasksToHome();
+  updateDefaultTasks();
   numberOfTasksSideBar();
 
   if (project.tasks.length === 0) return;
@@ -244,7 +244,13 @@ export function populateList(project = curProject) {
     listCard.appendChild(listItem);
 
     listBody.appendChild(listCard);
+    editTaskModal(editImg, listOfProjects, project.tasks[i]);
+    deleteTask(deleteImg, listOfProjects, project.tasks[i]);
   }
+}
+
+function editTaskModal(editImg, allProjects, task) {
+  editImg.addEventListener("click", () => {});
 }
 
 // Lists the projects created
@@ -297,34 +303,37 @@ function priorityColor(priority, div) {
 
 // Shows a number after Home, Today, This week with number of tasks
 function numberOfTasksSideBar() {
-  tasksToday();
-  tasksWeek();
   totalTasks.textContent = listOfProjects[2].tasks.length;
   todayTasks.textContent = listOfProjects[2].getTasksToday().length;
   weekTasks.textContent = listOfProjects[2].getTasksWeek().length;
 }
 
-// Adds all the tasks to the "home" default project
-function addAllTasksToHome() {
-  for (let i = 3; i < listOfProjects.length; i++) {
-    for (let j = 0; j < listOfProjects[i].tasks.length; j++) {
-      listOfProjects[2].addTask(listOfProjects[i].tasks[j]);
+function updateDefaultTasks() {
+  // Adds all the tasks to the "home" default project
+  function addAllTasksToHome() {
+    for (let i = 3; i < listOfProjects.length; i++) {
+      for (let j = 0; j < listOfProjects[i].tasks.length; j++) {
+        listOfProjects[2].addTask(listOfProjects[i].tasks[j]);
+      }
     }
   }
-}
 
-// Populates the today object with todays tasks
-function tasksToday() {
-  for (let i = 0; i < listOfProjects[2].getTasksToday().length; i++) {
-    listOfProjects[0].addTask(listOfProjects[2].getTasksToday()[i]);
+  // Populates the today object with todays tasks
+  function tasksToday() {
+    for (let i = 0; i < listOfProjects[2].getTasksToday().length; i++) {
+      listOfProjects[0].addTask(listOfProjects[2].getTasksToday()[i]);
+    }
   }
-}
 
-// Populates the week object with this weeks tasks
-function tasksWeek() {
-  for (let i = 0; i < listOfProjects[2].getTasksWeek().length; i++) {
-    listOfProjects[1].addTask(listOfProjects[2].getTasksWeek()[i]);
+  // Populates the week object with this weeks tasks
+  function tasksWeek() {
+    for (let i = 0; i < listOfProjects[2].getTasksWeek().length; i++) {
+      listOfProjects[1].addTask(listOfProjects[2].getTasksWeek()[i]);
+    }
   }
+  addAllTasksToHome();
+  tasksToday();
+  tasksWeek();
 }
 
 // buttons for selecting Home, Today or This week

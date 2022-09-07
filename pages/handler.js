@@ -50,12 +50,27 @@ export function submitProject(listOfProjects) {
     populateProjectList();
     document.querySelector(".modal.is-visible").classList.remove(isVisible);
     overlay.classList.remove("active");
-    console.log(listOfProjects);
   });
-  console.log(listOfProjects);
 }
 
-function deleteTask() {}
+// Deletes a task when the trash can is clicked
+export function deleteTask(div, project, task) {
+  div.addEventListener("click", function (e) {
+    for (let i = 0; i < project.length; i++) {
+      for (let j = 0; j < project[i].tasks.length; j++) {
+        if (project[i].tasks[j].title === task.title) {
+          project[i].deleteTask(task);
+        }
+      }
+    }
+
+    populateList();
+  });
+}
+
+export function editTask(div, project, task) {
+  div.addEventListener("click", () => {});
+}
 
 // Initializes the app
 export function initApp() {
