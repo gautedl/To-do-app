@@ -24,7 +24,7 @@ export function submitTask(listOfProjects, project) {
     const chosenProj = project.value; //The name value of the chosen project
 
     getProjectFromName(listOfProjects, chosenProj).addTask(newTask); // Adds the task to the correct project
-    populateList();
+    populateList(getProjectFromName(listOfProjects, chosenProj));
     document.querySelector(".modal.is-visible").classList.remove(isVisible);
     overlay.classList.remove("active");
   });
@@ -68,8 +68,39 @@ export function deleteTask(div, project, task) {
   });
 }
 
-export function editTask(div, project, task) {
-  div.addEventListener("click", () => {});
+// Edits the task
+export function editTask(project, task, listOfProjects) {
+  const button = document.querySelector(".update-task");
+  button.addEventListener("click", () => {
+    task.setTitle(title.value);
+    task.setDescription(description.value);
+    task.setDueDate(duedate.value);
+    task.setPriority(taskpriority.value);
+
+    const chosenProj = getProjectFromName(listOfProjects, project.value);
+
+    swapProjects(chosenProj, task, listOfProjects);
+
+    document.querySelector(".modal.is-visible").classList.remove(isVisible);
+    overlay.classList.remove("active");
+  });
+}
+
+// Function for moving a task to another project when edited.
+function swapProjects(project, task, listOfProjects) {
+  if (project.findTask(task.title) === false) {
+    for (let i = 0; i < listOfProjects.length; i++) {
+      for (let j = 0; j < listOfProjects[i].tasks.length; j++) {
+        if (listOfProjects[i].tasks[j].title === task.title) {
+          listOfProjects[i].deleteTask(task);
+          project.addTask(task);
+        }
+      }
+    }
+    populateList();
+  } else {
+    populateList();
+  }
 }
 
 // Initializes the app

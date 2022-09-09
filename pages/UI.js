@@ -46,7 +46,7 @@ newProject.addProject(anotherProject);
 export function openTaskModal() {
   const newTask = document.querySelector(".add-task");
   newTask.addEventListener("click", function () {
-    taskModal();
+    newTaskModal();
     modal.classList.add(isVisible);
     overlay.classList.add("active");
   });
@@ -100,7 +100,7 @@ function projectModal() {
 }
 
 // Function for creating and populating the task modal
-function taskModal() {
+function newTaskModal() {
   modal.innerHTML = ""; // Cleans up modal for every time it's called
 
   const modalDialog = document.createElement("div");
@@ -244,13 +244,120 @@ export function populateList(project = curProject) {
     listCard.appendChild(listItem);
 
     listBody.appendChild(listCard);
-    editTaskModal(editImg, listOfProjects, project.tasks[i]);
+    editTaskModal(editImg, project.tasks[i]);
     deleteTask(deleteImg, listOfProjects, project.tasks[i]);
   }
 }
 
-function editTaskModal(editImg, allProjects, task) {
-  editImg.addEventListener("click", () => {});
+// Edits the task
+function editTaskModal(editImg, task) {
+  editImg.addEventListener("click", () => {
+    modal.innerHTML = ""; // Cleans up modal for every time it's called
+
+    const modalDialog = document.createElement("div");
+    modalDialog.className = "modal-dialog";
+    const header = document.createElement("header");
+    header.className = "modal-header";
+    header.innerHTML = `
+          <p>${task.title}</p>
+          <button class="close-modal" aria-label="close modal" data-close>
+            X
+          </button>`;
+    modalDialog.appendChild(header);
+
+    const section = document.createElement("section");
+    section.className = "modal-content";
+    const form = document.createElement("form");
+    form.className = "task-form";
+    const leftSide = document.createElement("div");
+    leftSide.className = "left-side";
+    leftSide.innerHTML = `
+              <input
+                class="inputs"
+                value="${task.title}"
+                type="text"
+                id="title"
+                name="title"
+                required
+              />
+              <textarea
+                type="text"
+                id="description"
+                name="description"
+                cols="30"
+                rows="4"
+                required
+              >${task.description}</textarea>`;
+
+    form.appendChild(leftSide);
+    const rightSide = document.createElement("div");
+    rightSide.className = "right-side";
+
+    const dueDateDiv = document.createElement("div");
+    dueDateDiv.className = "form-div";
+    dueDateDiv.innerHTML = `
+                <label for="duedate">Due Date</label>
+                <input type="date" class="inputs" name="duedate" id="duedate" value="${task.dueDate}"/>`;
+
+    const priDiv = document.createElement("div");
+    priDiv.className = "form-div";
+
+    priDiv.innerHTML = `<label for="taskpriority">Priority</label>
+                <select name="taskpriority" id="taskpriority">
+                  <option class="lowPri" value="low" ${
+                    task.priority === "low" ? "selected" : ""
+                  }>Low</option>
+                  <option value="medium" class="mediumPri ${
+                    task.priority === "medium" ? "selected" : ""
+                  }">Medium</option>
+                  <option value="high" class="highPri" ${
+                    task.priority === "high" ? "selected" : ""
+                  }>High</option>
+                </select>`;
+
+    const projectDiv = document.createElement("div");
+    projectDiv.className = "form-div";
+    projectDiv.innerHTML = `<label for="pickproject">Project</label>`;
+
+    const pickProject = document.createElement("select");
+    pickProject.name = "pickproject";
+    pickProject.id = "pickproject";
+    for (let i = 2; i < listOfProjects.length; i++) {
+      const option = document.createElement("option");
+      option.value = listOfProjects[i].title;
+      option.textContent = listOfProjects[i].title;
+
+      if (
+        listOfProjects[i].findTask(task.title) &&
+        listOfProjects[i].title != "Undefined"
+      ) {
+        option.selected = "true";
+      }
+
+      pickProject.appendChild(option);
+    }
+
+    projectDiv.appendChild(pickProject);
+
+    rightSide.appendChild(dueDateDiv);
+    rightSide.appendChild(priDiv);
+    rightSide.appendChild(projectDiv);
+    form.appendChild(rightSide);
+
+    const button = document.createElement("div");
+    button.innerHTML = `<button class="update-task" type="button">Update task</button>`;
+    form.appendChild(button);
+    section.appendChild(form);
+    modalDialog.appendChild(section);
+
+    modal.appendChild(modalDialog); // Appends the newly created modal to modal tag in index.html
+    const closeTaskModal = document.querySelector("[data-close]"); //Fetches the clsoe button from modal inenrHTMLmodal.classList.add(isVisible);
+    modal.classList.add(isVisible);
+    overlay.classList.add("active");
+    editTask(pickProject, task, listOfProjects);
+
+    closeModal(closeTaskModal); // Closes the modal
+  });
 }
 
 // Lists the projects created
