@@ -69,9 +69,8 @@ export function deleteTask(div, project, task) {
 }
 
 // Edits the task
-export function editTask(project, task, listOfProjects) {
-  const button = document.querySelector(".update-task");
-  button.addEventListener("click", () => {
+export function editTask(btn, project, task, listOfProjects) {
+  btn.addEventListener("click", () => {
     task.setTitle(title.value);
     task.setDescription(description.value);
     task.setDueDate(duedate.value);

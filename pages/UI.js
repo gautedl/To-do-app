@@ -55,7 +55,7 @@ export function openTaskModal() {
 // Function for closing modal. Takes the close button of current modal as input
 function closeModal(el) {
   el.addEventListener("click", function () {
-    this.parentElement.parentElement.parentElement.classList.remove(isVisible);
+    modal.classList.remove(isVisible);
     overlay.classList.remove("active");
   });
 }
@@ -246,6 +246,7 @@ export function populateList(project = curProject) {
     listBody.appendChild(listCard);
     editTaskModal(editImg, project.tasks[i]);
     deleteTask(deleteImg, listOfProjects, project.tasks[i]);
+    taskInfoModal(openTaskBtn, project.tasks[i]);
   }
 }
 
@@ -354,7 +355,7 @@ function editTaskModal(editImg, task) {
     const closeTaskModal = document.querySelector("[data-close]"); //Fetches the clsoe button from modal inenrHTMLmodal.classList.add(isVisible);
     modal.classList.add(isVisible);
     overlay.classList.add("active");
-    editTask(pickProject, task, listOfProjects);
+    editTask(button, pickProject, task, listOfProjects);
 
     closeModal(closeTaskModal); // Closes the modal
   });
@@ -465,3 +466,48 @@ sideBarButtons.forEach((btn) => {
     }
   });
 });
+
+function taskInfoModal(openBtn, task) {
+  modal.innerHTML = "";
+
+  openBtn.addEventListener("click", () => {
+    modal.innerHTML = "";
+    const modalDialog = document.createElement("div");
+    // modalDialog.className = "modal";
+    modalDialog.className = "project-modal-dialog";
+    modalDialog.innerHTML = `
+        <header class="modal-header">
+          <p>${task.title}</p>
+          <button class="close-modal" aria-label="close modal" data-close>
+            X
+          </button>
+        </header>
+        <section>
+          <div class="modal-form">
+            <div class="task-info">
+              <p>${task.description}</p>
+              <div class="date-pri">
+                <p>${task.dueDate}</p>
+                <p>${task.priority}</p>
+              </div>
+            </div>
+            <div class="btns">
+              <button class="close" type="button">Close</button>
+              <button class="edit" type="button">Edit</button>
+            </div>
+          </div>
+        </section>
+      `;
+
+    modal.appendChild(modalDialog);
+    const closeBtn = document.querySelector(".close");
+    const editBtn = document.querySelector(".edit");
+    const closeProjectModal = document.querySelector("[data-close]");
+    modal.classList.add(isVisible);
+    overlay.classList.add("active");
+    console.log(closeBtn);
+    editTaskModal(editBtn, task);
+    closeModal(closeProjectModal);
+    closeModal(closeBtn);
+  });
+}
