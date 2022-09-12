@@ -244,6 +244,13 @@ export function populateList(project = curProject) {
     listCard.appendChild(listItem);
 
     listBody.appendChild(listCard);
+
+    if (!project.tasks[i].active) {
+      listCard.classList.add("unactive");
+      checkbox.checked = true;
+    }
+
+    checkTask(checkbox);
     editTaskModal(editImg, project.tasks[i]);
     deleteTask(deleteImg, listOfProjects, project.tasks[i]);
     taskInfoModal(openTaskBtn, project.tasks[i]);
@@ -467,6 +474,7 @@ sideBarButtons.forEach((btn) => {
   });
 });
 
+// Modal that shows the tasks info
 function taskInfoModal(openBtn, task) {
   modal.innerHTML = "";
 
@@ -509,5 +517,22 @@ function taskInfoModal(openBtn, task) {
     editTaskModal(editBtn, task);
     closeModal(closeProjectModal);
     closeModal(closeBtn);
+  });
+}
+
+function checkTask(checkbox) {
+  checkbox.addEventListener("click", (e) => {
+    const taskName = checkbox.parentElement.children[1].textContent;
+
+    for (let i = 0; i < listOfProjects.length; i++) {
+      for (let j = 0; j < listOfProjects[i].tasks.length; j++) {
+        if (listOfProjects[i].tasks[j].title === taskName) {
+          checkbox.parentElement.parentElement.classList.toggle("unactive");
+          listOfProjects[i].tasks[j].active =
+            !listOfProjects[i].tasks[j].active;
+          return;
+        }
+      }
+    }
   });
 }

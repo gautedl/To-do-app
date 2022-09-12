@@ -139,6 +139,11 @@ body {
 
 }
 
+.list-card.unactive {
+    opacity: 50%;
+
+}
+
 .checkbox-name {
     font-size: 20px;
 }
@@ -163,6 +168,8 @@ body {
     align-items: center;
     gap: 2rem;
 }
+
+
 
 .list-items > img {
     height: 1.5rem;
