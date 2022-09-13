@@ -50,15 +50,16 @@
 
           <div class="header-buttons">
             <div class="sort-dropdown">
-              <button class="sort-dropdown-button">
+              <select class="sort-dropdown-button">
                 Sort by
-                <img src="../img/sort.png" alt="" />
-              </button>
-              <div class="dropdown-content sort-content">
-                <p data-sort="sort-alphabetical">By name</p>
-                <p data-sort="sort-alphabetical-reverse">By name, reverse</p>
-                <p data-sort="sort-priority">Priority</p>
-              </div>
+                <!-- <img src="../img/sort.png" alt="" /> -->
+                <option data-sort="sort-alphabetical">By name</option>
+                <option data-sort="sort-alphabetical-reverse">By name, reverse</option>
+                <option data-sort="sort-priority">Priority</option>
+              </select>
+              
+                
+              
             </div>
             <div class="switch-layout-btns">
               <img src="../img/grid.png" alt="" data-view="grid" />

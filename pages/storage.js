@@ -1,7 +1,7 @@
 import Project from "./project";
 
 // Stores the projects in a list
-export default class ListOfProjects {
+export class ListOfProjects {
   constructor() {
     this.projects = [];
     this.projects.push(new Project("Today"));

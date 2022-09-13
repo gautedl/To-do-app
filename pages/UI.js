@@ -1,12 +1,24 @@
 import edit from "../img/edit.png";
 import deleteImgSrc from "../img/delete.png";
 import { submitTask, submitProject, deleteTask, editTask } from "./handler";
-import ListOfProjects from "./storage";
+import { ListOfProjects } from "./storage";
 import Task from "./task";
 import Project from "./project";
 
 const newProject = new ListOfProjects();
-const listOfProjects = newProject.getProjects();
+
+// const listOfProjects = newProject.getProjects();
+
+// const localeListOfProjects = new ListOfProjects();
+const projects = JSON.parse(localStorage.getItem("listOfProjects")) || [];
+
+// Adds the tasks from local storage to list of projects
+for (let i = 3; i < projects.length; i++) {
+  newProject.addProject(new Project(projects[i].title, projects[i].tasks));
+}
+
+const listOfProjects = newProject.projects;
+
 const overlay = document.querySelector(".overlay");
 const isVisible = "is-visible";
 const listBody = document.querySelector(".list-body");
@@ -21,25 +33,41 @@ const listTitle = document.getElementById("list-title");
 
 let curProject = listOfProjects[2]; //Stores the current project selected. Defaults at home
 
+// Loops trough list of projects and add tasks to the projects
+for (let j = 0; j < listOfProjects.length; j++) {
+  const tasks = JSON.parse(localStorage.getItem(listOfProjects[j].title)) || [];
+  for (let i = 0; i < tasks.length; i++) {
+    listOfProjects[j].addTask(
+      new Task(
+        tasks[i].title,
+        tasks[i].description,
+        tasks[i].dueDate,
+        tasks[i].priority,
+        tasks[i].active
+      )
+    );
+  }
+}
+
 // Test data
-const project = new Project("new");
-const task = new Task();
-task.setTitle("Yo");
-task.setDescription("desc");
-task.setDueDate("2022-09-08");
-task.setPriority("high");
+// const project = new Project("new");
+// const task = new Task();
+// task.setTitle("Yo");
+// task.setDescription("desc");
+// task.setDueDate("2022-09-08");
+// task.setPriority("high");
 
-const task2 = new Task();
-task2.setTitle("Y234o");
-task2.setDescription("desc");
-task2.setDueDate("2022-09-07");
-task2.setPriority("low");
-const anotherProject = new Project("msdfasdf");
+// const task2 = new Task();
+// task2.setTitle("Y234o");
+// task2.setDescription("desc");
+// task2.setDueDate("2022-09-07");
+// task2.setPriority("low");
+// const anotherProject = new Project("msdfasdf");
 
-anotherProject.addTask(task);
-project.addTask(task2);
-newProject.addProject(project);
-newProject.addProject(anotherProject);
+// anotherProject.addTask(task);
+// project.addTask(task2);
+// newProject.addProject(project);
+// newProject.addProject(anotherProject);
 // End test data
 
 // Opens the modal for creating a new task
@@ -513,13 +541,13 @@ function taskInfoModal(openBtn, task) {
     const closeProjectModal = document.querySelector("[data-close]");
     modal.classList.add(isVisible);
     overlay.classList.add("active");
-    console.log(closeBtn);
     editTaskModal(editBtn, task);
     closeModal(closeProjectModal);
     closeModal(closeBtn);
   });
 }
 
+// Sets the status of task to active or unactive when checkbox is clicked.
 function checkTask(checkbox) {
   checkbox.addEventListener("click", (e) => {
     const taskName = checkbox.parentElement.children[1].textContent;

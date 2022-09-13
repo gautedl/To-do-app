@@ -20,14 +20,40 @@ export function submitTask(listOfProjects, project) {
       duedate.value,
       taskpriority.value
     );
-    // project.addTask(newTask);
+
     const chosenProj = project.value; //The name value of the chosen project
 
-    getProjectFromName(listOfProjects, chosenProj).addTask(newTask); // Adds the task to the correct project
-    populateList(getProjectFromName(listOfProjects, chosenProj));
+    const currentProj = getProjectFromName(listOfProjects, chosenProj);
+
+    currentProj.addTask(newTask); // Adds the task to the correct project
+    populateList(currentProj);
+
+    const listOfTasks = currentProj.tasks;
+
+    saveTasks(chosenProj, listOfTasks, currentProj);
+
+    populateList(currentProj);
+
     document.querySelector(".modal.is-visible").classList.remove(isVisible);
     overlay.classList.remove("active");
   });
+}
+
+// Saves the tasks to local storage
+function saveTasks(chosenProjName, listOfTasks, currentProj) {
+  let list = [];
+  for (let i = 0; i < listOfTasks.length; i++) {
+    list.push(listOfTasks[i]);
+  }
+
+  localStorage.setItem(chosenProjName, JSON.stringify(list));
+
+  const tasks = JSON.parse(localStorage.getItem(chosenProjName)) || [];
+  // const locallyStored = JSON.parse(localStorage.getItem("Undefined")) || [];
+
+  for (let i = 0; i < tasks.length; i++) {
+    currentProj.addTask(tasks[i]);
+  }
 }
 
 // Gets a project from project name
@@ -47,6 +73,18 @@ export function submitProject(listOfProjects) {
 
     const newProject = new Project(projectname.value);
     listOfProjects.addProject(newProject);
+
+    const listOfProjectsNew = listOfProjects.projects;
+
+    let list = [];
+    for (let i = 0; i < listOfProjectsNew.length; i++) {
+      list.push(listOfProjectsNew[i]);
+    }
+
+    localStorage.setItem("listOfProjects", JSON.stringify(list));
+
+    const projects = JSON.parse(localStorage.getItem("listOfProjects")) || [];
+
     populateProjectList();
     document.querySelector(".modal.is-visible").classList.remove(isVisible);
     overlay.classList.remove("active");
@@ -60,6 +98,7 @@ export function deleteTask(div, project, task) {
       for (let j = 0; j < project[i].tasks.length; j++) {
         if (project[i].tasks[j].title === task.title) {
           project[i].deleteTask(task);
+          saveTasks(project[i].title, project[i].tasks, project[i]);
         }
       }
     }
@@ -79,6 +118,7 @@ export function editTask(btn, project, task, listOfProjects) {
     const chosenProj = getProjectFromName(listOfProjects, project.value);
 
     swapProjects(chosenProj, task, listOfProjects);
+    saveTasks(project.value, chosenProj.tasks, chosenProj);
 
     document.querySelector(".modal.is-visible").classList.remove(isVisible);
     overlay.classList.remove("active");
