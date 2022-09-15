@@ -1,6 +1,11 @@
 import Project from "./project";
 import Task from "./task";
-import { openTaskModal, populateList, populateProjectList } from "./UI";
+import {
+  openTaskModal,
+  populateList,
+  populateProjectList,
+  updateDefaultTasks,
+} from "./UI";
 
 const isVisible = "is-visible";
 const overlay = document.querySelector(".overlay");
@@ -40,7 +45,7 @@ export function submitTask(listOfProjects, project) {
 }
 
 // Saves the tasks to local storage
-function saveTasks(chosenProjName, listOfTasks, currentProj) {
+export function saveTasks(chosenProjName, listOfTasks, currentProj) {
   let list = [];
   for (let i = 0; i < listOfTasks.length; i++) {
     list.push(listOfTasks[i]);
@@ -77,8 +82,8 @@ export function submitProject(listOfProjects) {
     const listOfProjectsNew = listOfProjects.projects;
 
     let list = [];
-    for (let i = 0; i < listOfProjectsNew.length; i++) {
-      list.push(listOfProjectsNew[i]);
+    for (let i = 2; i < listOfProjectsNew.length; i++) {
+      list.push(listOfProjectsNew[i].title);
     }
 
     localStorage.setItem("listOfProjects", JSON.stringify(list));
@@ -94,7 +99,7 @@ export function submitProject(listOfProjects) {
 // Deletes a task when the trash can is clicked
 export function deleteTask(div, project, task) {
   div.addEventListener("click", function (e) {
-    for (let i = 0; i < project.length; i++) {
+    for (let i = 2; i < project.length; i++) {
       for (let j = 0; j < project[i].tasks.length; j++) {
         if (project[i].tasks[j].title === task.title) {
           project[i].deleteTask(task);
@@ -102,7 +107,7 @@ export function deleteTask(div, project, task) {
         }
       }
     }
-
+    updateDefaultTasks();
     populateList();
   });
 }
@@ -110,14 +115,22 @@ export function deleteTask(div, project, task) {
 // Edits the task
 export function editTask(btn, project, task, listOfProjects) {
   btn.addEventListener("click", () => {
+    const prevTask = new Task(
+      task.title,
+      task.description,
+      task.duedate,
+      task.setPriority
+    );
     task.setTitle(title.value);
     task.setDescription(description.value);
     task.setDueDate(duedate.value);
     task.setPriority(taskpriority.value);
 
+    console.log(task, prevTask);
     const chosenProj = getProjectFromName(listOfProjects, project.value);
 
-    swapProjects(chosenProj, task, listOfProjects);
+    swapProjects(chosenProj, task, listOfProjects, prevTask);
+
     saveTasks(project.value, chosenProj.tasks, chosenProj);
 
     document.querySelector(".modal.is-visible").classList.remove(isVisible);
@@ -126,12 +139,13 @@ export function editTask(btn, project, task, listOfProjects) {
 }
 
 // Function for moving a task to another project when edited.
-function swapProjects(project, task, listOfProjects) {
+function swapProjects(project, task, listOfProjects, prevTask) {
   if (project.findTask(task.title) === false) {
     for (let i = 0; i < listOfProjects.length; i++) {
       for (let j = 0; j < listOfProjects[i].tasks.length; j++) {
-        if (listOfProjects[i].tasks[j].title === task.title) {
-          listOfProjects[i].deleteTask(task);
+        if (listOfProjects[i].tasks[j].title === prevTask.title) {
+          console.log(listOfProjects[i], prevTask);
+          listOfProjects[i].deleteTask(prevTask);
           project.addTask(task);
         }
       }

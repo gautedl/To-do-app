@@ -1,6 +1,13 @@
 import edit from "../img/edit.png";
 import deleteImgSrc from "../img/delete.png";
-import { submitTask, submitProject, deleteTask, editTask } from "./handler";
+import newProjectBtnImg from "../img/plus-circle.svg";
+import {
+  submitTask,
+  submitProject,
+  deleteTask,
+  editTask,
+  saveTasks,
+} from "./handler";
 import { ListOfProjects } from "./storage";
 import Task from "./task";
 import Project from "./project";
@@ -12,9 +19,10 @@ const newProject = new ListOfProjects();
 // const localeListOfProjects = new ListOfProjects();
 const projects = JSON.parse(localStorage.getItem("listOfProjects")) || [];
 
-// Adds the tasks from local storage to list of projects
-for (let i = 3; i < projects.length; i++) {
-  newProject.addProject(new Project(projects[i].title, projects[i].tasks));
+// Adds the tasks from local storage to list of projects that is not default
+for (let i = 1; i < projects.length; i++) {
+  const tasksFromProject = JSON.parse(localStorage.getItem(projects[i])) || [];
+  newProject.addProject(new Project(projects[i], tasksFromProject));
 }
 
 const listOfProjects = newProject.projects;
@@ -34,8 +42,9 @@ const listTitle = document.getElementById("list-title");
 let curProject = listOfProjects[2]; //Stores the current project selected. Defaults at home
 
 // Loops trough list of projects and add tasks to the projects
-for (let j = 0; j < listOfProjects.length; j++) {
+for (let j = 2; j < listOfProjects.length; j++) {
   const tasks = JSON.parse(localStorage.getItem(listOfProjects[j].title)) || [];
+
   for (let i = 0; i < tasks.length; i++) {
     listOfProjects[j].addTask(
       new Task(
@@ -225,6 +234,8 @@ export function populateList(project = curProject) {
   listBody.innerHTML = "";
   updateDefaultTasks();
   numberOfTasksSideBar();
+  if (project.title === "Undefined") listTitle.textContent = "Home";
+  else listTitle.textContent = project.title;
 
   if (project.tasks.length === 0) return;
 
@@ -276,11 +287,13 @@ export function populateList(project = curProject) {
     if (!project.tasks[i].active) {
       listCard.classList.add("unactive");
       checkbox.checked = true;
+      console.log("yee");
     }
 
     checkTask(checkbox);
     editTaskModal(editImg, project.tasks[i]);
     deleteTask(deleteImg, listOfProjects, project.tasks[i]);
+
     taskInfoModal(openTaskBtn, project.tasks[i]);
   }
 }
@@ -404,7 +417,13 @@ export function populateProjectList() {
   newProjectBtn.textContent = "Add Project";
   newProjectBtn.onclick = projectModal;
   const btnLi = document.createElement("li");
-  btnLi.appendChild(newProjectBtn);
+  const btnDiv = document.createElement("div");
+  btnDiv.className = "button-list";
+  const btnImg = document.createElement("img");
+  btnImg.src = newProjectBtnImg;
+  newProjectBtn.appendChild(btnImg);
+  btnDiv.appendChild(newProjectBtn);
+  btnLi.appendChild(btnDiv);
 
   for (let i = 3; i < listOfProjects.length; i++) {
     const projecTitle = document.createElement("li");
@@ -451,7 +470,7 @@ function numberOfTasksSideBar() {
   weekTasks.textContent = listOfProjects[2].getTasksWeek().length;
 }
 
-function updateDefaultTasks() {
+export function updateDefaultTasks() {
   // Adds all the tasks to the "home" default project
   function addAllTasksToHome() {
     for (let i = 3; i < listOfProjects.length; i++) {
@@ -459,20 +478,27 @@ function updateDefaultTasks() {
         listOfProjects[2].addTask(listOfProjects[i].tasks[j]);
       }
     }
+    saveTasks("Undefined", listOfProjects[2].tasks, listOfProjects[2]);
   }
 
   // Populates the today object with todays tasks
   function tasksToday() {
+    listOfProjects[0].tasks.splice(0, listOfProjects[0].tasks.length);
     for (let i = 0; i < listOfProjects[2].getTasksToday().length; i++) {
       listOfProjects[0].addTask(listOfProjects[2].getTasksToday()[i]);
     }
+
+    // saveTasks("Today", listOfProjects[0].tasks, listOfProjects[0]);
   }
 
   // Populates the week object with this weeks tasks
   function tasksWeek() {
+    listOfProjects[1].tasks.splice(0, listOfProjects[1].tasks.length);
     for (let i = 0; i < listOfProjects[2].getTasksWeek().length; i++) {
       listOfProjects[1].addTask(listOfProjects[2].getTasksWeek()[i]);
     }
+
+    // saveTasks("Week", listOfProjects[1].tasks, listOfProjects[1]);
   }
   addAllTasksToHome();
   tasksToday();
@@ -483,20 +509,26 @@ function updateDefaultTasks() {
 sideBarButtons.forEach((btn) => {
   btn.addEventListener("click", function (e) {
     if (e.target.textContent === "Today") {
+      updateDefaultTasks();
       curProject = listOfProjects[0];
       listTitle.textContent = "Today";
+
       populateList(curProject);
     }
 
     if (e.target.textContent === "Home") {
+      updateDefaultTasks();
       curProject = listOfProjects[2];
       listTitle.textContent = "Home";
+
       populateList(curProject);
     }
 
     if (e.target.textContent === "This Week") {
+      updateDefaultTasks();
       curProject = listOfProjects[1];
       listTitle.textContent = "This Week";
+
       populateList(curProject);
     }
   });
@@ -551,15 +583,22 @@ function taskInfoModal(openBtn, task) {
 function checkTask(checkbox) {
   checkbox.addEventListener("click", (e) => {
     const taskName = checkbox.parentElement.children[1].textContent;
+    console.log(taskName);
 
-    for (let i = 0; i < listOfProjects.length; i++) {
+    for (let i = 2; i < listOfProjects.length; i++) {
       for (let j = 0; j < listOfProjects[i].tasks.length; j++) {
         if (listOfProjects[i].tasks[j].title === taskName) {
           checkbox.parentElement.parentElement.classList.toggle("unactive");
+          console.log(listOfProjects[i]);
           listOfProjects[i].tasks[j].active =
             !listOfProjects[i].tasks[j].active;
-          return;
+          saveTasks(
+            listOfProjects[i].title,
+            listOfProjects[i].tasks,
+            listOfProjects[i]
+          );
         }
+        return;
       }
     }
   });
