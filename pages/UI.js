@@ -1,20 +1,20 @@
 import edit from "../img/edit.png";
 import deleteImgSrc from "../img/delete.png";
 import newProjectBtnImg from "../img/plus-circle.svg";
+import deleteProjectImg from "../img/icons8-remove-24.png";
 import {
   submitTask,
   submitProject,
-  deleteTask,
+  deleteTaskFromList,
   editTask,
   saveTasks,
+  deleteProject,
 } from "./handler";
 import { ListOfProjects } from "./storage";
 import Task from "./task";
 import Project from "./project";
 
 const newProject = new ListOfProjects();
-
-// const listOfProjects = newProject.getProjects();
 
 // const localeListOfProjects = new ListOfProjects();
 const projects = JSON.parse(localStorage.getItem("listOfProjects")) || [];
@@ -25,7 +25,25 @@ for (let i = 1; i < projects.length; i++) {
   newProject.addProject(new Project(projects[i], tasksFromProject));
 }
 
-const listOfProjects = newProject.projects;
+// const newProject.projects = newProject.projects;
+
+// Loops trough list of projects and add tasks to the projects
+for (let j = 3; j < newProject.projects.length; j++) {
+  const tasks =
+    JSON.parse(localStorage.getItem(newProject.projects[j].title)) || [];
+
+  for (let i = 0; i < tasks.length; i++) {
+    newProject.projects[j].addTask(
+      new Task(
+        tasks[i].title,
+        tasks[i].description,
+        tasks[i].dueDate,
+        tasks[i].priority,
+        tasks[i].active
+      )
+    );
+  }
+}
 
 const overlay = document.querySelector(".overlay");
 const isVisible = "is-visible";
@@ -39,45 +57,7 @@ const todayTasks = document.getElementById("today-count");
 const weekTasks = document.getElementById("week-count");
 const listTitle = document.getElementById("list-title");
 
-let curProject = listOfProjects[2]; //Stores the current project selected. Defaults at home
-
-// Loops trough list of projects and add tasks to the projects
-for (let j = 2; j < listOfProjects.length; j++) {
-  const tasks = JSON.parse(localStorage.getItem(listOfProjects[j].title)) || [];
-
-  for (let i = 0; i < tasks.length; i++) {
-    listOfProjects[j].addTask(
-      new Task(
-        tasks[i].title,
-        tasks[i].description,
-        tasks[i].dueDate,
-        tasks[i].priority,
-        tasks[i].active
-      )
-    );
-  }
-}
-
-// Test data
-// const project = new Project("new");
-// const task = new Task();
-// task.setTitle("Yo");
-// task.setDescription("desc");
-// task.setDueDate("2022-09-08");
-// task.setPriority("high");
-
-// const task2 = new Task();
-// task2.setTitle("Y234o");
-// task2.setDescription("desc");
-// task2.setDueDate("2022-09-07");
-// task2.setPriority("low");
-// const anotherProject = new Project("msdfasdf");
-
-// anotherProject.addTask(task);
-// project.addTask(task2);
-// newProject.addProject(project);
-// newProject.addProject(anotherProject);
-// End test data
+let curProject = newProject.projects[2]; //Stores the current project selected. Defaults at home
 
 // Opens the modal for creating a new task
 export function openTaskModal() {
@@ -121,6 +101,7 @@ function projectModal() {
                 name="projectname"
                 required
               />
+              <span class="error-msg"></span>
             </div>
             <div class="submit-btn">
               <button class="submit-project" type="button">Submit</button>
@@ -202,10 +183,10 @@ function newTaskModal() {
   const pickProject = document.createElement("select");
   pickProject.name = "pickproject";
   pickProject.id = "pickproject";
-  for (let i = 2; i < listOfProjects.length; i++) {
+  for (let i = 3; i < newProject.projects.length; i++) {
     const option = document.createElement("option");
-    option.value = listOfProjects[i].title;
-    option.textContent = listOfProjects[i].title;
+    option.value = newProject.projects[i].title;
+    option.textContent = newProject.projects[i].title;
     pickProject.appendChild(option);
   }
 
@@ -225,7 +206,7 @@ function newTaskModal() {
 
   modal.appendChild(modalDialog); // Appends the newly created modal to modal tag in index.html
   const closeTaskModal = document.querySelector("[data-close]"); //Fetches the clsoe button from modal inenrHTML
-  submitTask(listOfProjects, pickProject); // Submits task to project.
+  submitTask(newProject.projects, pickProject); // Submits task to project.
   closeModal(closeTaskModal); // Closes the modal
 }
 
@@ -287,12 +268,11 @@ export function populateList(project = curProject) {
     if (!project.tasks[i].active) {
       listCard.classList.add("unactive");
       checkbox.checked = true;
-      console.log("yee");
     }
 
     checkTask(checkbox);
     editTaskModal(editImg, project.tasks[i]);
-    deleteTask(deleteImg, listOfProjects, project.tasks[i]);
+    deleteTaskFromList(deleteImg, newProject.projects, project.tasks[i]);
 
     taskInfoModal(openTaskBtn, project.tasks[i]);
   }
@@ -371,14 +351,14 @@ function editTaskModal(editImg, task) {
     const pickProject = document.createElement("select");
     pickProject.name = "pickproject";
     pickProject.id = "pickproject";
-    for (let i = 2; i < listOfProjects.length; i++) {
+    for (let i = 3; i < newProject.projects.length; i++) {
       const option = document.createElement("option");
-      option.value = listOfProjects[i].title;
-      option.textContent = listOfProjects[i].title;
+      option.value = newProject.projects[i].title;
+      option.textContent = newProject.projects[i].title;
 
       if (
-        listOfProjects[i].findTask(task.title) &&
-        listOfProjects[i].title != "Undefined"
+        newProject.projects[i].findTask(task.title) &&
+        newProject.projects[i].title != "Undefined"
       ) {
         option.selected = "true";
       }
@@ -403,7 +383,7 @@ function editTaskModal(editImg, task) {
     const closeTaskModal = document.querySelector("[data-close]"); //Fetches the clsoe button from modal inenrHTMLmodal.classList.add(isVisible);
     modal.classList.add(isVisible);
     overlay.classList.add("active");
-    editTask(button, pickProject, task, listOfProjects);
+    editTask(button, pickProject, task, newProject.projects);
 
     closeModal(closeTaskModal); // Closes the modal
   });
@@ -411,6 +391,8 @@ function editTaskModal(editImg, task) {
 
 // Lists the projects created
 export function populateProjectList() {
+  updateDefaultTasks();
+  numberOfTasksSideBar();
   projectList.innerHTML = "";
   const newProjectBtn = document.createElement("button");
   newProjectBtn.className = "new-project";
@@ -425,11 +407,17 @@ export function populateProjectList() {
   btnDiv.appendChild(newProjectBtn);
   btnLi.appendChild(btnDiv);
 
-  for (let i = 3; i < listOfProjects.length; i++) {
+  for (let i = 3; i < newProject.projects.length; i++) {
+    const deleteProjectBtn = document.createElement("img");
+    deleteProjectBtn.src = deleteProjectImg;
     const projecTitle = document.createElement("li");
     projecTitle.className = "project-title";
-    projecTitle.textContent = listOfProjects[i].title;
+    projecTitle.textContent = newProject.projects[i].title;
+    if (newProject.projects[i].title != "Undefined") {
+      projecTitle.appendChild(deleteProjectBtn);
+    }
     projectList.appendChild(projecTitle);
+    deleteProject(deleteProjectBtn, newProject.projects[i], newProject);
   }
 
   projectList.appendChild(btnLi);
@@ -441,11 +429,11 @@ function selectProjectSideBar() {
 
   projectButtons.forEach((btn) => {
     btn.addEventListener("click", function (e) {
-      for (let i = 3; i < listOfProjects.length; i++) {
-        if (listOfProjects[i].title === e.target.textContent) {
-          populateList(listOfProjects[i]);
-          listTitle.textContent = listOfProjects[i].title;
-          curProject = listOfProjects[i];
+      for (let i = 2; i < newProject.projects.length; i++) {
+        if (newProject.projects[i].title === e.target.textContent) {
+          populateList(newProject.projects[i]);
+          listTitle.textContent = newProject.projects[i].title;
+          curProject = newProject.projects[i];
         }
       }
     });
@@ -465,40 +453,40 @@ function priorityColor(priority, div) {
 
 // Shows a number after Home, Today, This week with number of tasks
 function numberOfTasksSideBar() {
-  totalTasks.textContent = listOfProjects[2].tasks.length;
-  todayTasks.textContent = listOfProjects[2].getTasksToday().length;
-  weekTasks.textContent = listOfProjects[2].getTasksWeek().length;
+  totalTasks.textContent = newProject.projects[2].tasks.length;
+  todayTasks.textContent = newProject.projects[2].getTasksToday().length;
+  weekTasks.textContent = newProject.projects[2].getTasksWeek().length;
 }
 
 export function updateDefaultTasks() {
   // Adds all the tasks to the "home" default project
   function addAllTasksToHome() {
-    for (let i = 3; i < listOfProjects.length; i++) {
-      for (let j = 0; j < listOfProjects[i].tasks.length; j++) {
-        listOfProjects[2].addTask(listOfProjects[i].tasks[j]);
+    newProject.projects[2].tasks.splice(0, newProject.projects[2].tasks.length);
+    for (let i = 3; i < newProject.projects.length; i++) {
+      for (let j = 0; j < newProject.projects[i].tasks.length; j++) {
+        newProject.projects[2].addTask(newProject.projects[i].tasks[j]);
       }
     }
-    saveTasks("Undefined", listOfProjects[2].tasks, listOfProjects[2]);
   }
 
   // Populates the today object with todays tasks
   function tasksToday() {
-    listOfProjects[0].tasks.splice(0, listOfProjects[0].tasks.length);
-    for (let i = 0; i < listOfProjects[2].getTasksToday().length; i++) {
-      listOfProjects[0].addTask(listOfProjects[2].getTasksToday()[i]);
+    newProject.projects[0].tasks.splice(0, newProject.projects[0].tasks.length);
+    for (let i = 0; i < newProject.projects[2].getTasksToday().length; i++) {
+      newProject.projects[0].addTask(newProject.projects[2].getTasksToday()[i]);
     }
 
-    // saveTasks("Today", listOfProjects[0].tasks, listOfProjects[0]);
+    // saveTasks("Today", newProject.projects[0].tasks, newProject.projects[0]);
   }
 
   // Populates the week object with this weeks tasks
   function tasksWeek() {
-    listOfProjects[1].tasks.splice(0, listOfProjects[1].tasks.length);
-    for (let i = 0; i < listOfProjects[2].getTasksWeek().length; i++) {
-      listOfProjects[1].addTask(listOfProjects[2].getTasksWeek()[i]);
+    newProject.projects[1].tasks.splice(0, newProject.projects[1].tasks.length);
+    for (let i = 0; i < newProject.projects[2].getTasksWeek().length; i++) {
+      newProject.projects[1].addTask(newProject.projects[2].getTasksWeek()[i]);
     }
 
-    // saveTasks("Week", listOfProjects[1].tasks, listOfProjects[1]);
+    // saveTasks("Week", newProject.projects[1].tasks, newProject.projects[1]);
   }
   addAllTasksToHome();
   tasksToday();
@@ -510,7 +498,7 @@ sideBarButtons.forEach((btn) => {
   btn.addEventListener("click", function (e) {
     if (e.target.textContent === "Today") {
       updateDefaultTasks();
-      curProject = listOfProjects[0];
+      curProject = newProject.projects[0];
       listTitle.textContent = "Today";
 
       populateList(curProject);
@@ -518,7 +506,7 @@ sideBarButtons.forEach((btn) => {
 
     if (e.target.textContent === "Home") {
       updateDefaultTasks();
-      curProject = listOfProjects[2];
+      curProject = newProject.projects[2];
       listTitle.textContent = "Home";
 
       populateList(curProject);
@@ -526,7 +514,7 @@ sideBarButtons.forEach((btn) => {
 
     if (e.target.textContent === "This Week") {
       updateDefaultTasks();
-      curProject = listOfProjects[1];
+      curProject = newProject.projects[1];
       listTitle.textContent = "This Week";
 
       populateList(curProject);
@@ -583,19 +571,18 @@ function taskInfoModal(openBtn, task) {
 function checkTask(checkbox) {
   checkbox.addEventListener("click", (e) => {
     const taskName = checkbox.parentElement.children[1].textContent;
-    console.log(taskName);
 
-    for (let i = 2; i < listOfProjects.length; i++) {
-      for (let j = 0; j < listOfProjects[i].tasks.length; j++) {
-        if (listOfProjects[i].tasks[j].title === taskName) {
+    for (let i = 3; i < newProject.projects.length; i++) {
+      for (let j = 0; j < newProject.projects[i].tasks.length; j++) {
+        if (newProject.projects[i].tasks[j].title === taskName) {
           checkbox.parentElement.parentElement.classList.toggle("unactive");
-          console.log(listOfProjects[i]);
-          listOfProjects[i].tasks[j].active =
-            !listOfProjects[i].tasks[j].active;
+
+          newProject.projects[i].tasks[j].active =
+            !newProject.projects[i].tasks[j].active;
           saveTasks(
-            listOfProjects[i].title,
-            listOfProjects[i].tasks,
-            listOfProjects[i]
+            newProject.projects[i].title,
+            newProject.projects[i].tasks,
+            newProject.projects[i]
           );
         }
         return;

@@ -1,3 +1,4 @@
+import { kk } from "date-fns/locale";
 import Project from "./project";
 import Task from "./task";
 import {
@@ -23,7 +24,8 @@ export function submitTask(listOfProjects, project) {
       title.value,
       description.value,
       duedate.value,
-      taskpriority.value
+      taskpriority.value,
+      true
     );
 
     const chosenProj = project.value; //The name value of the chosen project
@@ -73,22 +75,18 @@ function getProjectFromName(project, title) {
 // Creates new project
 export function submitProject(listOfProjects) {
   const submitProjectBtn = document.querySelector(".submit-project");
+  const errorMsg = document.querySelector(".error-msg");
   submitProjectBtn.addEventListener("click", function (e) {
     if (projectname.value === "") return;
 
     const newProject = new Project(projectname.value);
+    if (listOfProjects.addProject(newProject) === false) {
+      errorMsg.textContent = "Project already exist";
+      return;
+    }
     listOfProjects.addProject(newProject);
 
-    const listOfProjectsNew = listOfProjects.projects;
-
-    let list = [];
-    for (let i = 2; i < listOfProjectsNew.length; i++) {
-      list.push(listOfProjectsNew[i].title);
-    }
-
-    localStorage.setItem("listOfProjects", JSON.stringify(list));
-
-    const projects = JSON.parse(localStorage.getItem("listOfProjects")) || [];
+    updateProjects(listOfProjects);
 
     populateProjectList();
     document.querySelector(".modal.is-visible").classList.remove(isVisible);
@@ -96,19 +94,49 @@ export function submitProject(listOfProjects) {
   });
 }
 
+function updateProjects(listOfProjects) {
+  const listOfProjectsNew = listOfProjects.projects;
+
+  let list = [];
+  for (let i = 3; i < listOfProjectsNew.length; i++) {
+    list.push(listOfProjectsNew[i].title);
+  }
+
+  localStorage.setItem("listOfProjects", JSON.stringify(list));
+
+  const projects = JSON.parse(localStorage.getItem("listOfProjects")) || [];
+}
+
 // Deletes a task when the trash can is clicked
-export function deleteTask(div, project, task) {
+export function deleteTaskFromList(div, project, task) {
   div.addEventListener("click", function (e) {
     for (let i = 2; i < project.length; i++) {
       for (let j = 0; j < project[i].tasks.length; j++) {
         if (project[i].tasks[j].title === task.title) {
           project[i].deleteTask(task);
+
           saveTasks(project[i].title, project[i].tasks, project[i]);
         }
       }
     }
     updateDefaultTasks();
     populateList();
+  });
+}
+
+// Deletes a project
+export function deleteProject(div, project, listOfProjects) {
+  div.addEventListener("click", (e) => {
+    for (let i = 0; i < listOfProjects.projects.length; i++) {
+      if (listOfProjects.projects[i].title === project.title) {
+        localStorage.removeItem(project.title);
+        listOfProjects.deleteProject(project);
+        updateProjects(listOfProjects);
+      }
+    }
+    updateDefaultTasks();
+    populateList();
+    populateProjectList();
   });
 }
 
@@ -126,7 +154,6 @@ export function editTask(btn, project, task, listOfProjects) {
     task.setDueDate(duedate.value);
     task.setPriority(taskpriority.value);
 
-    console.log(task, prevTask);
     const chosenProj = getProjectFromName(listOfProjects, project.value);
 
     swapProjects(chosenProj, task, listOfProjects, prevTask);
@@ -144,7 +171,6 @@ function swapProjects(project, task, listOfProjects, prevTask) {
     for (let i = 0; i < listOfProjects.length; i++) {
       for (let j = 0; j < listOfProjects[i].tasks.length; j++) {
         if (listOfProjects[i].tasks[j].title === prevTask.title) {
-          console.log(listOfProjects[i], prevTask);
           listOfProjects[i].deleteTask(prevTask);
           project.addTask(task);
         }

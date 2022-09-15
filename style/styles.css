@@ -393,6 +393,22 @@ li {
     cursor: pointer;
 }
 
+
+.project-title > img {
+    display: none;
+    height: 15px;
+    width: 15px;
+    margin: 0;
+    margin-left: 30px;
+    
+}
+
+.project-title:hover img {
+    display: inline-block;
+    cursor: pointer;
+}
+
+
 .new-project:hover {
     cursor: pointer;
 }
