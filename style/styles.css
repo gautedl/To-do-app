@@ -240,6 +240,10 @@ body {
     border: 2px gray solid;
 }
 
+.modal-form {
+    max-height: auto;
+}
+
 .close-modal {
     height: 25px;
     width: 25px;
@@ -249,10 +253,11 @@ body {
 
 .modal-header {
     display: flex;
-    width: 100%;
+    width: auto;
     justify-content: space-between;
     align-items: center;
-    background-color: lightgrey;
+    background-color: var(--baby-blue-eyes);
+    padding-left: 10px;
 }
 
 .overlay {
@@ -287,6 +292,42 @@ body {
     gap: 10px;
 }
 
+.left-side {
+    grid-row: 1 / span 2;
+    padding-top: 20px;
+    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+#title {
+    width: 320px;
+    height: 40px;
+    font-size: 18px;
+    border: none;
+}
+
+#description {
+    width: 320px;
+    resize: none;
+    border: none;
+    height: 100%;
+}
+
+#description:focus {
+    outline: none;
+    border: none;
+}
+
+.right-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    padding-right: 20px;
+}
+
 
 input[type="date"]::-webkit-calendar-picker-indicator {
     background: transparent;
@@ -314,7 +355,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .submit-btn {
     grid-column: 2;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
+    
 }
 
 .submit {
@@ -332,14 +374,89 @@ li {
 }
 
 .project-modal-dialog {
-    height: 200px;
-    width: 300px;
+    height: 250px;
+    width: 350px;
     position: relative;
     border-radius: 8px;
     overflow: auto;
     background: rgb(241, 241, 241);
     border: 2px gray solid;
+   
 }
+
+.btn {
+    display: inline-block;
+    padding: 0.3em 1.2em;
+    border-radius: 2em;
+    border: none;
+    box-sizing: border-box;
+    text-decoration: none;
+    background-color: var(--cerulean-frost);
+    color: #FFFFFF;
+    text-align: center;
+    transition: all 0.2s;
+} 
+
+.btn:hover {
+    cursor: pointer;
+    background-color: #274C77;
+}
+
+.project-inputs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+   
+    justify-content: center;
+    padding-top: 30px;
+}
+
+.error-msg {
+    color: red;
+}
+
+.project-inputs > input {
+    width: 80%;
+    height: 20px;
+}
+
+.submit-btn-project {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+.submit-task {
+    width: 120px; 
+    height: 50px;    
+}
+
+
+.submit-project {
+    height: 50px;
+    width: 80px;
+    font-size: 18px;
+}
+
+
+.btns {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+}
+
+.btns > button {
+    width: 80px;
+    height: 40px;
+    font-size: 18px;
+}
+
+.task-info {
+    margin-left: 20px;
+    width: auto;
+    height: 100%;
+}
+
+
 
 .low-pri {
     border-left: 5px solid green;
@@ -418,3 +535,4 @@ li {
     align-items: center;
     justify-content: center;
 }
+

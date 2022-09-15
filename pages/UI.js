@@ -103,8 +103,8 @@ function projectModal() {
               />
               <span class="error-msg"></span>
             </div>
-            <div class="submit-btn">
-              <button class="submit-project" type="button">Submit</button>
+            <div class="submit-btn-project">
+              <button class="submit-project btn" type="button">Submit</button>
             </div>
           </form>
         </section>
@@ -152,8 +152,7 @@ function newTaskModal() {
                 placeholder="Description"
                 id="description"
                 name="description"
-                cols="30"
-                rows="4"
+                
                 required
               ></textarea>`;
 
@@ -199,7 +198,7 @@ function newTaskModal() {
 
   const button = document.createElement("div");
   button.className = "submit-btn";
-  button.innerHTML = `<button class="submit-task" type="button">Submit</button>`;
+  button.innerHTML = `<button class="submit-task btn" type="button">Submit</button>`;
   form.appendChild(button);
   section.appendChild(form);
   modalDialog.appendChild(section);
@@ -240,6 +239,7 @@ export function populateList(project = curProject) {
     listItem.className = "list-items";
     const openTaskBtn = document.createElement("button");
     openTaskBtn.className = "open-task";
+    openTaskBtn.classList.add("btn");
     openTaskBtn.textContent = "Open";
     const dueDate = document.createElement("div");
     dueDate.className = "task-date";
@@ -375,7 +375,7 @@ function editTaskModal(editImg, task) {
     form.appendChild(rightSide);
 
     const button = document.createElement("div");
-    button.innerHTML = `<button class="update-task" type="button">Update task</button>`;
+    button.innerHTML = `<button class="update-task btn" type="button">Update task</button>`;
     form.appendChild(button);
     section.appendChild(form);
     modalDialog.appendChild(section);
@@ -402,6 +402,7 @@ export function populateProjectList() {
   const btnLi = document.createElement("li");
   const btnDiv = document.createElement("div");
   btnDiv.className = "button-list";
+
   const btnImg = document.createElement("img");
   btnImg.src = newProjectBtnImg;
   newProjectBtn.appendChild(btnImg);
@@ -540,13 +541,13 @@ function taskInfoModal(openBtn, task) {
             <div class="task-info">
               <p>${task.description}</p>
               <div class="date-pri">
-                <p>${task.dueDate}</p>
-                <p>${task.priority}</p>
+                <p>Date: ${task.dueDate}</p>
+                <p>Priority: ${task.priority}</p>
               </div>
             </div>
             <div class="btns">
-              <button class="close" type="button">Close</button>
-              <button class="edit" type="button">Edit</button>
+              <button class="close btn" type="button">Close</button>
+              <button class="edit btn" type="button">Edit</button>
             </div>
           </div>
         </section>
