@@ -27,7 +27,9 @@ export default class Project {
   }
 
   addTask(newTask) {
-    this.tasks.push(newTask);
+    if (this.tasks.some((task) => task.title === newTask.title)) {
+      return;
+    } else this.tasks.push(newTask);
   }
 
   getTasksToday() {

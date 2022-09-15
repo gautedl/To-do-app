@@ -5,7 +5,7 @@ import {
   openTaskModal,
   populateList,
   populateProjectList,
-  updateDefaultTasks,
+  numberOfTasksSideBar,
 } from "./UI";
 
 const isVisible = "is-visible";
@@ -119,7 +119,7 @@ export function deleteTaskFromList(div, project, task) {
         }
       }
     }
-    updateDefaultTasks();
+    numberOfTasksSideBar();
     populateList();
   });
 }
@@ -134,8 +134,8 @@ export function deleteProject(div, project, listOfProjects) {
         updateProjects(listOfProjects);
       }
     }
-    updateDefaultTasks();
-    populateList();
+    numberOfTasksSideBar();
+    populateList(listOfProjects.projects[2]);
     populateProjectList();
   });
 }
